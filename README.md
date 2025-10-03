@@ -54,7 +54,7 @@ A partir dos notebooks desenvolvidos nas aulas 01 a 04 do 2º semestre, onde for
 4. ✅ **Realizar o deploy do webapp** em ambiente de produção.
    - **URL:** http://191.252.203.163:3001
 
-5. ✅ **(Opcional, 1 ponto extra)** - Enriquecer as sinopses de cada filme da base de dados utilizando **IA Generativa**.
+5. ✅  - Enriquecer as sinopses de cada filme da base de dados utilizando **IA Generativa**.
    - **Implementado:** `lib/ai_synopsis_enhancer.py`
    - **API:** `/api/enhance-synopsis`
    - **Componente:** `AIEnhancementModal.tsx`
