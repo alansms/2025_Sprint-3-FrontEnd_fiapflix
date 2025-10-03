@@ -35,12 +35,17 @@ export default function FavoritesModal({ onClose, onMovieClick, onMovieInfo }: F
       const response = await fetch('/api/movies')
       const allMovies = await response.json()
       
-      // Filtrar apenas os favoritos
+      // Filtrar apenas os favoritos e remover duplicatas
       const favoriteMovies = allMovies.filter((movie: Movie) => 
         favoriteIds.includes(movie.id)
       )
       
-      setFavorites(favoriteMovies)
+      // Remover duplicatas por ID (caso ainda existam)
+      const uniqueFavorites = favoriteMovies.filter((movie, index, self) => 
+        index === self.findIndex(m => m.id === movie.id)
+      )
+      
+      setFavorites(uniqueFavorites)
     } catch (error) {
       console.error('Erro ao carregar favoritos:', error)
       setFavorites([])
@@ -206,3 +211,4 @@ export default function FavoritesModal({ onClose, onMovieClick, onMovieInfo }: F
     </div>
   )
 }
+

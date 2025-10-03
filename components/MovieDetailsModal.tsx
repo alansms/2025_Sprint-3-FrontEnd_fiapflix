@@ -26,11 +26,15 @@ export default function MovieDetailsModal({ movie, onClose, onPlay }: MovieDetai
     
     const favorites = JSON.parse(localStorage.getItem('fiapflix_favorites') || '[]')
     if (isFavorite) {
+      // Remover dos favoritos
       const newFavorites = favorites.filter((id: string) => id !== movie.id)
       localStorage.setItem('fiapflix_favorites', JSON.stringify(newFavorites))
     } else {
-      const newFavorites = [...favorites, movie.id]
-      localStorage.setItem('fiapflix_favorites', JSON.stringify(newFavorites))
+      // Adicionar aos favoritos (verificar se já não está)
+      if (!favorites.includes(movie.id)) {
+        const newFavorites = [...favorites, movie.id]
+        localStorage.setItem('fiapflix_favorites', JSON.stringify(newFavorites))
+      }
     }
     setIsFavorite(!isFavorite)
   }
