@@ -7,48 +7,56 @@ import path from 'path'
 let realMovies: Movie[] = []
 
 try {
-  // Tentar carregar dataset real primeiro
-  const realDataPath = path.join(process.cwd(), 'imdb_100plus_movies_real.json')
-  const realData = fs.readFileSync(realDataPath, 'utf-8')
-  realMovies = JSON.parse(realData)
-  console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset real)`)
+  // Tentar carregar dataset completo primeiro
+  const completeDataPath = path.join(process.cwd(), 'imdb_100plus_movies_complete.json')
+  const completeData = fs.readFileSync(completeDataPath, 'utf-8')
+  realMovies = JSON.parse(completeData)
+  console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset completo)`)
 } catch (error) {
   try {
-    // Fallback para dataset com 100+ filmes
-    const expandedDataPath = path.join(process.cwd(), 'imdb_100plus_movies.json')
-    const expandedData = fs.readFileSync(expandedDataPath, 'utf-8')
-    realMovies = JSON.parse(expandedData)
-    console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset 100+)`)
+    // Fallback para dataset real
+    const realDataPath = path.join(process.cwd(), 'imdb_100plus_movies_real.json')
+    const realData = fs.readFileSync(realDataPath, 'utf-8')
+    realMovies = JSON.parse(realData)
+    console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset real)`)
   } catch (fallbackError) {
     try {
-      // Fallback para dataset com 50+ filmes
-      const expandedDataPath = path.join(process.cwd(), 'imdb_50plus_movies.json')
+      // Fallback para dataset com 100+ filmes
+      const expandedDataPath = path.join(process.cwd(), 'imdb_100plus_movies.json')
       const expandedData = fs.readFileSync(expandedDataPath, 'utf-8')
       realMovies = JSON.parse(expandedData)
-      console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset 50+)`)
+      console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset 100+)`)
     } catch (secondFallbackError) {
       try {
-        // Fallback para dataset expandido
-        const expandedDataPath = path.join(process.cwd(), 'imdb_expanded_real.json')
+        // Fallback para dataset com 50+ filmes
+        const expandedDataPath = path.join(process.cwd(), 'imdb_50plus_movies.json')
         const expandedData = fs.readFileSync(expandedDataPath, 'utf-8')
         realMovies = JSON.parse(expandedData)
-        console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset expandido)`)
+        console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset 50+)`)
       } catch (thirdFallbackError) {
         try {
-          // Fallback para dados finais
-          const finalDataPath = path.join(process.cwd(), 'imdb_final_real.json')
-          const finalData = fs.readFileSync(finalDataPath, 'utf-8')
-          realMovies = JSON.parse(finalData)
-          console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dados finais)`)
+          // Fallback para dataset expandido
+          const expandedDataPath = path.join(process.cwd(), 'imdb_expanded_real.json')
+          const expandedData = fs.readFileSync(expandedDataPath, 'utf-8')
+          realMovies = JSON.parse(expandedData)
+          console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset expandido)`)
         } catch (fourthFallbackError) {
           try {
-            // Fallback para dados do IMDb Top 250
-            const dataPath = path.join(process.cwd(), 'imdb_top250_real.json')
-            const data = fs.readFileSync(dataPath, 'utf-8')
-            realMovies = JSON.parse(data)
-            console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (fallback)`)
+            // Fallback para dados finais
+            const finalDataPath = path.join(process.cwd(), 'imdb_final_real.json')
+            const finalData = fs.readFileSync(finalDataPath, 'utf-8')
+            realMovies = JSON.parse(finalData)
+            console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dados finais)`)
           } catch (fifthFallbackError) {
-            console.log('⚠️ Usando dados mock como fallback')
+            try {
+              // Fallback para dados do IMDb Top 250
+              const dataPath = path.join(process.cwd(), 'imdb_top250_real.json')
+              const data = fs.readFileSync(dataPath, 'utf-8')
+              realMovies = JSON.parse(data)
+              console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (fallback)`)
+            } catch (sixthFallbackError) {
+              console.log('⚠️ Usando dados mock como fallback')
+            }
           }
         }
       }
