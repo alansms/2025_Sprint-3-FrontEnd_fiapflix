@@ -3,159 +3,95 @@ import { Movie } from '@/lib/types'
 import fs from 'fs'
 import path from 'path'
 
+// Cache para evitar chamadas repetidas ao OMDb
+const imageCache = new Map<string, string>()
+const OMDB_API_KEY = '668159f8'
+
+// Função para buscar poster do OMDb
+async function fetchOMDbPoster(title: string, year: number): Promise<string> {
+  const cacheKey = `${title}_${year}`
+  
+  // Verificar cache
+  if (imageCache.has(cacheKey)) {
+    return imageCache.get(cacheKey)!
+  }
+  
+  try {
+    const response = await fetch(
+      `http://www.omdbapi.com/?apikey=${OMDB_API_KEY}&t=${encodeURIComponent(title)}&y=${year}&type=movie`
+    )
+    
+    if (!response.ok) {
+      throw new Error('Falha ao buscar do OMDb')
+    }
+    
+    const data = await response.json()
+    
+    if (data.Response === 'True' && data.Poster && data.Poster !== 'N/A') {
+      imageCache.set(cacheKey, data.Poster)
+      return data.Poster
+    }
+  } catch (error) {
+    console.error(`❌ Erro ao buscar poster para ${title}:`, error)
+  }
+  
+  // Fallback para placeholder
+  return `https://picsum.photos/seed/${title.replace(/\s+/g, '')}/500/750`
+}
+
 // Carregar dados reais do IMDb
 let realMovies: Movie[] = []
 
 try {
-  // Tentar carregar dataset completo primeiro
   const completeDataPath = path.join(process.cwd(), 'imdb_100plus_movies_complete.json')
   const completeData = fs.readFileSync(completeDataPath, 'utf-8')
   realMovies = JSON.parse(completeData)
   console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset completo)`)
 } catch (error) {
   try {
-    // Fallback para dataset real
     const realDataPath = path.join(process.cwd(), 'imdb_100plus_movies_real.json')
     const realData = fs.readFileSync(realDataPath, 'utf-8')
     realMovies = JSON.parse(realData)
     console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset real)`)
   } catch (fallbackError) {
     try {
-      // Fallback para dataset com 100+ filmes
-      const expandedDataPath = path.join(process.cwd(), 'imdb_100plus_movies.json')
+      const expandedDataPath = path.join(process.cwd(), 'imdb_50plus_movies.json')
       const expandedData = fs.readFileSync(expandedDataPath, 'utf-8')
       realMovies = JSON.parse(expandedData)
-      console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset 100+)`)
-    } catch (secondFallbackError) {
-      try {
-        // Fallback para dataset com 50+ filmes
-        const expandedDataPath = path.join(process.cwd(), 'imdb_50plus_movies.json')
-        const expandedData = fs.readFileSync(expandedDataPath, 'utf-8')
-        realMovies = JSON.parse(expandedData)
-        console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset 50+)`)
-      } catch (thirdFallbackError) {
-        try {
-          // Fallback para dataset expandido
-          const expandedDataPath = path.join(process.cwd(), 'imdb_expanded_real.json')
-          const expandedData = fs.readFileSync(expandedDataPath, 'utf-8')
-          realMovies = JSON.parse(expandedData)
-          console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset expandido)`)
-        } catch (fourthFallbackError) {
-          try {
-            // Fallback para dados finais
-            const finalDataPath = path.join(process.cwd(), 'imdb_final_real.json')
-            const finalData = fs.readFileSync(finalDataPath, 'utf-8')
-            realMovies = JSON.parse(finalData)
-            console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dados finais)`)
-          } catch (fifthFallbackError) {
-            try {
-              // Fallback para dados do IMDb Top 250
-              const dataPath = path.join(process.cwd(), 'imdb_top250_real.json')
-              const data = fs.readFileSync(dataPath, 'utf-8')
-              realMovies = JSON.parse(data)
-              console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (fallback)`)
-            } catch (sixthFallbackError) {
-              console.log('⚠️ Usando dados mock como fallback')
-            }
-          }
-        }
-      }
+      console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset 50+)`)
+    } catch (thirdFallbackError) {
+      console.log('⚠️ Usando dados mock como fallback')
     }
   }
 }
 
-const mockMovies: Movie[] = [
-  {
-    id: '1',
-    rank: 1,
-    title_en: 'The Shawshank Redemption',
-    title_pt: 'Um Sonho de Liberdade',
-    year: 1994,
-    rating: 9.3,
-    genre: 'Drama',
-    sinopse: 'Um banqueiro condenado por uxoricídio forma uma amizade ao longo de um quarto de século com um criminoso endurecido, enquanto gradualmente se envolve no esquema de lavagem de dinheiro do diretor da prisão.',
-    director: 'Frank Darabont',
-    cast: 'Tim Robbins, Morgan Freeman, Bob Gunton',
-    duration: '142 min',
-    cluster: 1,
-    poster_url: 'https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg',
-    backdrop_url: 'https://image.tmdb.org/t/p/w1280/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg'
-  },
-  {
-    id: '2',
-    rank: 2,
-    title_en: 'The Godfather',
-    title_pt: 'O Poderoso Chefão',
-    year: 1972,
-    rating: 9.2,
-    genre: 'Crime, Drama',
-    sinopse: 'O patriarca envelhecido de uma dinastia do crime organizado transfere o controle de seu império clandestino para seu filme relutante.',
-    director: 'Francis Ford Coppola',
-    cast: 'Marlon Brando, Al Pacino, James Caan',
-    duration: '175 min',
-    cluster: 0,
-    poster_url: 'https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg',
-    backdrop_url: 'https://image.tmdb.org/t/p/w1280/3bhkrj58Vtu7enYsRolD1fZdja1.jpg'
-  },
-  {
-    id: '3',
-    rank: 3,
-    title_en: 'The Dark Knight',
-    title_pt: 'O Cavaleiro das Trevas',
-    year: 2008,
-    rating: 9.1,
-    genre: 'Action, Crime, Drama',
-    sinopse: 'Quando uma ameaça conhecida como Coringa causa estragos e caos no povo de Gotham, Batman deve aceitar um dos maiores testes psicológicos e físicos de sua capacidade de lutar contra a injustiça.',
-    director: 'Christopher Nolan',
-    cast: 'Christian Bale, Heath Ledger, Aaron Eckhart',
-    duration: '152 min',
-    cluster: 2,
-    poster_url: 'https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg',
-    backdrop_url: 'https://image.tmdb.org/t/p/w1280/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg'
-  },
-  {
-    id: '4',
-    rank: 4,
-    title_en: 'The Godfather Part II',
-    title_pt: 'O Poderoso Chefão: Parte II',
-    year: 1974,
-    rating: 9.0,
-    genre: 'Crime, Drama',
-    sinopse: 'A vida inicial e carreira de Vito Corleone na Nova York dos anos 1920 é retratada, enquanto seu filho Michael expande o controle da família.',
-    director: 'Francis Ford Coppola',
-    cast: 'Al Pacino, Robert De Niro, Robert Duvall',
-    duration: '202 min',
-    cluster: 0,
-    poster_url: 'https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg',
-    backdrop_url: 'https://image.tmdb.org/t/p/w1280/3bhkrj58Vtu7enYsRolD1fZdja1.jpg'
-  },
-  {
-    id: '5',
-    rank: 5,
-    title_en: '12 Angry Men',
-    title_pt: '12 Homens e uma Sentença',
-    year: 1957,
-    rating: 9.0,
-    genre: 'Crime, Drama',
-    sinopse: 'Um júri tem que decidir se um jovem acusado de assassinato é culpado ou não. Baseado na peça, todos os homens do júri tentam descobrir se há alguma dúvida razoável.',
-    director: 'Sidney Lumet',
-    cast: 'Henry Fonda, Lee J. Cobb, Martin Balsam',
-    duration: '96 min',
-    cluster: 1,
-    poster_url: 'https://image.tmdb.org/t/p/w500/ow3wq89wM8qd5X7hWKxiRfsFf9C.jpg',
-    backdrop_url: 'https://image.tmdb.org/t/p/w1280/ow3wq89wM8qd5X7hWKxiRfsFf9C.jpg'
-  }
-]
-
 export async function GET() {
   try {
     // Simular delay de carregamento
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise(resolve => setTimeout(resolve, 500))
     
-    // Usar dados reais se disponíveis, senão usar mock
-    const movies = realMovies.length > 0 ? realMovies : mockMovies
+    // Enriquecer filmes com posters do OMDb (apenas para os primeiros 10 para não sobrecarregar)
+    const enrichedMovies = await Promise.all(
+      realMovies.slice(0, 50).map(async (movie) => {
+        // Se já tem poster válido, manter
+        if (movie.poster_url && !movie.poster_url.includes('9gk7adHYeDvHkCSEqAvQNLV5nfge')) {
+          return movie
+        }
+        
+        // Buscar do OMDb
+        const omdbPoster = await fetchOMDbPoster(movie.title_en, movie.year)
+        
+        return {
+          ...movie,
+          poster_url: omdbPoster,
+          backdrop_url: omdbPoster
+        }
+      })
+    )
     
-    return NextResponse.json(movies)
+    console.log(`✅ Enriquecidos ${enrichedMovies.length} filmes com posters do OMDb`)
+    
+    return NextResponse.json(enrichedMovies)
   } catch (error) {
     console.error('Erro ao carregar filmes:', error)
     return NextResponse.json(

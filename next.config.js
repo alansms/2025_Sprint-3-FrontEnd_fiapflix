@@ -14,6 +14,18 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'm.media-amazon.com',
+        port: '',
+        pathname: '/images/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'img.omdbapi.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   async rewrites() {
