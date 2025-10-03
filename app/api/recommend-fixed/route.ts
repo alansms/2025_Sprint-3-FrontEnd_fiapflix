@@ -22,13 +22,13 @@ export async function POST(request: NextRequest) {
 
     try {
       // Executar modelo Python diretamente
-      const pythonCommand = `python3 lib/run_recommendation.py '${JSON.stringify({
+      const pythonCommand = `python3 lib/run_recommendation.py "${JSON.stringify({
         synopsis,
         method,
         year: year || 2000,
         rating: rating || 8.0,
         genre: genre || 'Drama'
-      })}'`
+      })}"`
       
       console.log('🐍 Executando comando Python:', pythonCommand)
       
@@ -115,6 +115,54 @@ function getFallbackRecommendations(synopsis: string, method: string): NextRespo
       cluster: 2,
       poster_url: 'https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg',
       backdrop_url: 'https://image.tmdb.org/t/p/w1280/3bhkrj58Vtu7enYsRolD1fZdja1.jpg'
+    },
+    {
+      id: '3',
+      rank: 3,
+      title_en: 'The Dark Knight',
+      title_pt: 'O Cavaleiro das Trevas',
+      year: 2008,
+      rating: 9.1,
+      genre: 'Action, Crime, Drama',
+      sinopse: 'Quando uma ameaça conhecida como Coringa causa estragos e caos no povo de Gotham, Batman deve aceitar um dos maiores testes psicológicos e físicos de sua capacidade de lutar contra a injustiça.',
+      director: 'Christopher Nolan',
+      cast: 'Christian Bale, Heath Ledger, Aaron Eckhart',
+      duration: '152 min',
+      cluster: 2,
+      poster_url: 'https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg',
+      backdrop_url: 'https://image.tmdb.org/t/p/w1280/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg'
+    },
+    {
+      id: '4',
+      rank: 4,
+      title_en: 'The Godfather Part II',
+      title_pt: 'O Poderoso Chefão: Parte II',
+      year: 1974,
+      rating: 9.0,
+      genre: 'Crime, Drama',
+      sinopse: 'A vida inicial e carreira de Vito Corleone na Nova York dos anos 1920 é retratada, enquanto seu filho Michael expande o controle da família.',
+      director: 'Francis Ford Coppola',
+      cast: 'Al Pacino, Robert De Niro, Robert Duvall',
+      duration: '202 min',
+      cluster: 2,
+      poster_url: 'https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg',
+      backdrop_url: 'https://image.tmdb.org/t/p/w1280/3bhkrj58Vtu7enYsRolD1fZdja1.jpg'
+    },
+    {
+      id: '5',
+      rank: 5,
+      title_en: '12 Angry Men',
+      title_pt: '12 Homens e uma Sentença',
+      year: 1957,
+      rating: 9.0,
+      genre: 'Crime, Drama',
+      sinopse: 'Um jurado dissidente em um julgamento por assassinato tenta convencer os outros onze a reconsiderar a evidência.',
+      director: 'Sidney Lumet',
+      cast: 'Henry Fonda, Lee J. Cobb, Martin Balsam',
+      duration: '96 min',
+      cluster: 2,
+      poster_url: 'https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg',
+      backdrop_url: 'https://image.tmdb.org/t/p/w1280/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg'
     }
   ]
 
