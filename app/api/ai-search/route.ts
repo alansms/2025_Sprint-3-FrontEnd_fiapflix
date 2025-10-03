@@ -179,7 +179,7 @@ function analyzeQuery(query: string): {
   filters: {
     genre?: string
     year?: { min?: number; max?: number }
-    rating?: { min?: number }
+    rating?: { min?: number; max?: number }
     director?: string
     actor?: string
   }
@@ -240,6 +240,10 @@ function analyzeQuery(query: string): {
   // Rating
   if (lowerQuery.includes('melhor') || lowerQuery.includes('top') || lowerQuery.includes('alto')) {
     filters.rating = { min: 8.5 }
+  } else if (lowerQuery.includes('baixo') || lowerQuery.includes('ruim') || lowerQuery.includes('pior')) {
+    filters.rating = { max: 8.5 }
+  } else if (lowerQuery.includes('medio') || lowerQuery.includes('media')) {
+    filters.rating = { min: 7.0, max: 8.5 }
   }
   
   // Diretor
@@ -301,7 +305,11 @@ function semanticSearch(query: string, movies: Movie[]): { results: Movie[]; ana
   }
   
   if (analysis.filters.rating) {
-    results = results.filter(movie => movie.rating >= analysis.filters.rating!.min!)
+    results = results.filter(movie => {
+      if (analysis.filters.rating!.min && movie.rating < analysis.filters.rating!.min) return false
+      if (analysis.filters.rating!.max && movie.rating > analysis.filters.rating!.max) return false
+      return true
+    })
   }
   
   if (analysis.filters.director) {
@@ -351,25 +359,39 @@ function semanticSearch(query: string, movies: Movie[]): { results: Movie[]; ana
   if (results.length === 0) {
     relaxed = true
     let fallback = [...movies]
-    if (analysis.filters.genre) {
+    
+    // Primeiro, tentar apenas com filtro de rating
+    if (analysis.filters.rating) {
+      if (analysis.filters.rating.min) {
+        fallback = fallback.filter(m => m.rating >= analysis.filters.rating.min)
+      }
+      if (analysis.filters.rating.max) {
+        fallback = fallback.filter(m => m.rating <= analysis.filters.rating.max)
+      }
+    }
+    
+    // Se ainda vazio, tentar apenas com gênero
+    if (fallback.length === 0 && analysis.filters.genre) {
+      fallback = [...movies]
       const wanted = analysis.filters.genre.toLowerCase()
       const aliases = genreAlias[wanted] || [wanted]
       fallback = fallback.filter(m => aliases.some(a => m.genre.toLowerCase().includes(a)))
     }
-    if (analysis.filters.rating) {
-      fallback = fallback.filter(m => m.rating >= 8.0)
-    }
-    if (analysis.keywords.length > 0) {
-      fallback = fallback.filter(m => {
-        const text = `${m.title_pt} ${m.title_en} ${m.genre}`.toLowerCase()
-        return analysis.keywords.some(k => text.includes(k))
-      })
-    }
+    
+    // Se ainda vazio, usar todos os filmes
     if (fallback.length === 0) {
       fallback = [...movies]
-      if (analysis.filters.rating) fallback = fallback.filter(m => m.rating >= 8.0)
     }
-    fallback.sort((a, b) => b.rating - a.rating)
+    
+    // Aplicar ordenação baseada na intenção
+    if (analysis.filters.rating?.max) {
+      // Para rating baixo, ordenar por rating crescente
+      fallback.sort((a, b) => a.rating - b.rating)
+    } else {
+      // Para outros casos, ordenar por rating decrescente
+      fallback.sort((a, b) => b.rating - a.rating)
+    }
+    
     results = fallback.slice(0, 10)
   }
 
@@ -441,8 +463,21 @@ export async function POST(request: NextRequest) {
     // Analisar a consulta
     const initial = analyzeQuery(query)
     
+    // Carregar dados reais dos filmes
+    let movies = mockMovies
+    try {
+      const moviesResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/api/movies`)
+      if (moviesResponse.ok) {
+        const realMovies = await moviesResponse.json()
+        movies = realMovies
+        console.log(`✅ Carregados ${movies.length} filmes reais para busca IA`)
+      }
+    } catch (error) {
+      console.log('⚠️ Usando dados mock para busca IA')
+    }
+    
     // Realizar busca semântica com relaxamento
-    const { results, analysis, relaxed } = semanticSearch(query, mockMovies)
+    const { results, analysis, relaxed } = semanticSearch(query, movies)
     
     // Gerar resposta em linguagem natural
     const naturalResponse = generateNaturalResponse(query, results, analysis)

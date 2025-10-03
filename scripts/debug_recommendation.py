@@ -118,3 +118,4 @@ def test_api_call():
 if __name__ == '__main__':
     debug_recommendation()
     test_api_call()
+

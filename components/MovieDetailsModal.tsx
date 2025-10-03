@@ -171,3 +171,4 @@ export default function MovieDetailsModal({ movie, onClose, onPlay }: MovieDetai
     </div>
   )
 }
+

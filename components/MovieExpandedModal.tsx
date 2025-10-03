@@ -178,3 +178,4 @@ export default function MovieExpandedModal({ movie, onClose, onPlay, onDetails }
     </div>
   )
 }
+
