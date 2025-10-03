@@ -90,7 +90,7 @@ export default function RecommendationModal({ method, movies, onClose }: Recomme
     setError('')
 
     try {
-      const response = await fetch('/api/recommend-fixed', {
+        const response = await fetch('/api/recommend-smart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
