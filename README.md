@@ -35,19 +35,33 @@ A partir dos notebooks desenvolvidos nas aulas 01 a 04 do 2º semestre, onde for
 
 ### 📚 Objetivos Técnicos
 
-1. **Incluir as demais features do dataset** para o treinamento dos modelos utilizando a biblioteca de AutoML **PyCaret**.
+1. ✅ **Incluir as demais features do dataset** para o treinamento dos modelos utilizando a biblioteca de AutoML **PyCaret**.
+   - **Implementado:** `Notebook3_PyCaret_Comparison.ipynb`
+   - **Features:** year, rating, word_count, genre
+   - **Status:** 100% Conforme
 
-2. **Escolher a melhor opção entre os modelos** (via PyCaret ou Scikit-learn), com ou sem o uso de todas as features, **justificando a escolha**.
+2. ✅ **Escolher a melhor opção entre os modelos** (via PyCaret ou Scikit-learn), com ou sem o uso de todas as features, **justificando a escolha**.
+   - **Implementado:** Comparação completa PyCaret vs Scikit-learn
+   - **Métricas:** Silhouette, Calinski-Harabasz, Davies-Bouldin
+   - **Status:** 100% Conforme
 
-3. **Desenvolver um webapp** onde o usuário receba recomendações de filmes baseadas no modelo de clusterização treinado. Em uma tela inicial o usuário poderá escolher entre 2 métodos:
+3. ✅ **Desenvolver um webapp** onde o usuário receba recomendações de filmes baseadas no modelo de clusterização treinado. Em uma tela inicial o usuário poderá escolher entre 2 métodos:
 
-   - **Método 1:** Apresentar 3 a 5 opções de sinopses de filme (sem mostrar o título) e solicitar ao usuário que escolha 1 deles. Identificar a qual cluster pertence a sinopse escolhida e recomendar uma lista de 5 filmes pertencentes ao mesmo cluster. Definir o melhor critério para a seleção dos 5 filmes do cluster em questão a serem recomendados.
+   - ✅ **Método 1:** Apresentar 3 a 5 opções de sinopses de filme (sem mostrar o título) e solicitar ao usuário que escolha 1 deles. Identificar a qual cluster pertence a sinopse escolhida e recomendar uma lista de 5 filmes pertencentes ao mesmo cluster. Definir o melhor critério para a seleção dos 5 filmes do cluster em questão a serem recomendados.
+     - **Status:** 100% Conforme (`VALIDACAO_METODO1.md`)
 
-   - **Método 2:** Solicitar ao usuário que escreva um exemplo de sinopse de filme que agradaria a ele, e então esta sinopse deverá passar pelo processamento de texto e ser submetida ao modelo, que a classificará em um dos clusters. **Para este método deverá ser utilizado o modelo treinado somente com as sinopses vetorizadas.** Daí em diante o processo é o mesmo do método 1.
+   - ✅ **Método 2:** Solicitar ao usuário que escreva um exemplo de sinopse de filme que agradaria a ele, e então esta sinopse deverá passar pelo processamento de texto e ser submetida ao modelo, que a classificará em um dos clusters. **Para este método deverá ser utilizado o modelo treinado somente com as sinopses vetorizadas.** Daí em diante o processo é o mesmo do método 1.
+     - **Status:** 100% Conforme (`VALIDACAO_METODO2.md`)
 
-4. **Realizar o deploy do webapp** em ambiente de produção.
+4. ✅ **Realizar o deploy do webapp** em ambiente de produção.
+   - **URL:** http://191.252.203.163:3001
+   - **Status:** 100% Funcional
 
-5. **(Opcional, 1 ponto extra)** - Enriquecer as sinopses de cada filme da base de dados utilizando **IA Generativa**.
+5. ✅ **(Opcional, 1 ponto extra)** - Enriquecer as sinopses de cada filme da base de dados utilizando **IA Generativa**.
+   - **Implementado:** `lib/ai_synopsis_enhancer.py`
+   - **API:** `/api/enhance-synopsis`
+   - **Componente:** `AIEnhancementModal.tsx`
+   - **Status:** 100% Implementado
 
 ---
 
