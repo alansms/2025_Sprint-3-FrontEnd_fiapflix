@@ -104,14 +104,42 @@ A partir dos notebooks desenvolvidos nas aulas 01 a 04 do 2º semestre, onde for
 
 **Modelo Escolhido:** `kmeans_tfidf.pkl` (TF-IDF + Sinopses)
 
-**Justificativa:**
+**Justificativa (Comparação PyCaret vs Scikit-learn):**
 1. ✅ **Melhor Silhouette Score:** 0.42 vs 0.31 (All Features)
 2. ✅ **Clusters mais coesos:** Davies-Bouldin Index menor
 3. ✅ **Interpretabilidade:** Clusters baseados em similaridade textual
 4. ✅ **Alinhamento com objetivo:** Recomendações por tema/estilo narrativo
 5. ✅ **Desempenho:** Mais rápido e eficiente
+6. ✅ **Comparação PyCaret:** Ver `Notebook3_PyCaret_Comparison.ipynb`
 
-**Detalhes:** Ver `model_comparison_summary.csv` e notebooks de análise.
+**Detalhes:** Ver `model_comparison_summary.csv` e `pycaret_vs_sklearn_comparison.csv`
+
+---
+
+## 📓 Notebooks de Desenvolvimento
+
+### 1️⃣ **Notebook1_IMDb_WebScraping_KMeans.ipynb**
+- 🌐 **Web Scraping** do IMDb Top 250
+- 📝 **Processamento de texto** das sinopses
+- 🤖 **Treinamento KMeans** com TF-IDF
+- 📊 **Análise exploratória** dos dados
+- 📈 **Visualizações** dos clusters
+
+### 2️⃣ **Notebook2_Modelo_Comparacao_Features.ipynb**
+- 🔍 **Comparação** de modelos KMeans (Scikit-learn)
+- 📊 **Features:** TF-IDF vs Todas as features
+- 📈 **Métricas:** Silhouette, Calinski-Harabasz, Davies-Bouldin
+- ✅ **Justificativa** da escolha do modelo
+- 💾 **Salvamento** dos modelos treinados
+
+### 3️⃣ **Notebook3_PyCaret_Comparison.ipynb** ⭐ **NOVO**
+- 🤖 **Implementação PyCaret** para clustering
+- ⚖️ **Comparação PyCaret vs Scikit-learn**
+- 🚀 **AutoML** com múltiplos algoritmos (KMeans, DBSCAN, Hierarchical, GMM)
+- 📊 **Features completas:** year, rating, word_count, genre
+- ✅ **Justificativa** baseada em performance e métricas
+- 📈 **Visualizações** interativas dos resultados
+- 💾 **Exportação** de comparações: `pycaret_vs_sklearn_comparison.csv`
 
 ---
 
@@ -134,6 +162,45 @@ A partir dos notebooks desenvolvidos nas aulas 01 a 04 do 2º semestre, onde for
 - Recomenda **5 filmes** do mesmo cluster
 - **Modelo:** Exclusivamente TF-IDF (sinopses vetorizadas)
 
+### 🤖 **IA Generativa para Enriquecimento de Sinopses** ⭐ **NOVO - PONTO EXTRA**
+
+#### 📝 **Sistema de Enriquecimento**
+- **Arquivo Python:** `lib/ai_synopsis_enhancer.py`
+- **API Route:** `/api/enhance-synopsis`
+- **Componente React:** `AIEnhancementModal.tsx`
+
+#### ✨ **Funcionalidades**
+- 🎭 **Múltiplos Estilos:** Cinematográfico, Dramático, Ação, Romântico
+- 🤖 **Integração OpenAI:** Suporte para GPT-3.5-turbo (opcional)
+- 🔄 **Fallback Local:** Sistema funciona sem API externa
+- 📊 **Templates por Gênero:** Drama, Action, Comedy, Thriller, Sci-Fi
+- 💾 **Processamento em Lote:** Enriquecimento de datasets completos
+- 📈 **Estatísticas:** Tracking de métodos de enriquecimento
+
+#### 🎯 **Como Funciona**
+1. Usuário seleciona um filme
+2. Sistema analisa: título, ano, gênero, sinopse original
+3. IA enriquece a sinopse com:
+   - Detalhes visuais e emocionais
+   - Linguagem cinematográfica
+   - Contexto do gênero
+4. Resultado apresentado lado a lado com original
+
+#### 💡 **Exemplo de Uso**
+```python
+from ai_synopsis_enhancer import AISynopsisEnhancer
+
+enhancer = AISynopsisEnhancer()
+result = enhancer.enhance_synopsis(
+    title="O Poderoso Chefão",
+    year=1972,
+    genre="Drama",
+    original_synopsis="História de uma família de mafiosos",
+    style="cinematic"
+)
+print(result['enhanced_synopsis'])
+```
+
 ### 🎨 Interface Netflix-Style
 
 - ✅ Design moderno inspirado em Netflix
@@ -145,6 +212,7 @@ A partir dos notebooks desenvolvidos nas aulas 01 a 04 do 2º semestre, onde for
 - ✅ Sistema de favoritos (localStorage)
 - ✅ Modal de detalhes dos filmes
 - ✅ Modal de player expandido
+- ✅ **Modal de enriquecimento com IA** ⭐ **NOVO**
 - ✅ Responsivo (mobile-first)
 
 ### 🤖 Busca com IA Generativa
@@ -191,6 +259,8 @@ A partir dos notebooks desenvolvidos nas aulas 01 a 04 do 2º semestre, onde for
 - **TF-IDF** - Vetorização de texto
 - **StandardScaler** - Normalização de features
 - **LabelEncoder** - Encoding de categorias
+- **PyCaret** ⭐ **NOVO** - AutoML para clustering
+- **DBSCAN, Hierarchical, GMM** - Algoritmos adicionais (via PyCaret)
 
 ### Deploy & DevOps
 - **Docker** - Containerização
@@ -201,6 +271,7 @@ A partir dos notebooks desenvolvidos nas aulas 01 a 04 do 2º semestre, onde for
 ### APIs Externas
 - **OMDb API** - Posters de filmes
 - **TMDB API** - Metadados de filmes (fallback)
+- **OpenAI API** ⭐ **NOVO** - IA Generativa (opcional)
 
 ---
 
@@ -212,7 +283,8 @@ FiapFlix/
 │   ├── api/                      # API Routes
 │   │   ├── movies/route.ts       # Endpoint de filmes
 │   │   ├── recommend-smart/route.ts  # Sistema de recomendação
-│   │   └── ai-search/route.ts    # Busca com IA generativa
+│   │   ├── ai-search/route.ts    # Busca com IA generativa
+│   │   └── enhance-synopsis/route.ts ⭐ # Enriquecimento IA (NOVO)
 │   ├── page.tsx                  # Página principal
 │   └── layout.tsx                # Layout global
 ├── components/                   # Componentes React
@@ -221,6 +293,7 @@ FiapFlix/
 │   ├── MovieRow.tsx              # Carrossel de filmes
 │   ├── RecommendationModal.tsx   # Modal Métodos 1 e 2
 │   ├── AISearchModal.tsx         # Modal busca IA
+│   ├── AIEnhancementModal.tsx    ⭐ # Modal enriquecimento (NOVO)
 │   ├── MovieDetailsModal.tsx     # Modal de detalhes
 │   ├── MovieExpandedModal.tsx    # Modal expandido
 │   ├── FavoritesModal.tsx        # Modal de favoritos
@@ -228,7 +301,8 @@ FiapFlix/
 ├── lib/                          # Bibliotecas e utilitários
 │   ├── types.ts                  # Tipos TypeScript
 │   ├── ml_model_trained.py       # Sistema de ML
-│   └── run_recommendation.py     # Script de recomendação
+│   ├── run_recommendation.py     # Script de recomendação
+│   └── ai_synopsis_enhancer.py   ⭐ # Enriquecedor IA (NOVO)
 ├── models/                       # Modelos treinados
 │   ├── kmeans_tfidf.pkl          # Modelo TF-IDF
 │   ├── tfidf_vectorizer.pkl      # Vetorizador
@@ -237,12 +311,16 @@ FiapFlix/
 │   └── label_encoder_genre.pkl   # Encoder
 ├── public/                       # Assets públicos
 │   └── abertura.mp4              # Vídeo splash screen
-├── notebooks/                    # Jupyter Notebooks
-│   ├── Notebook1_IMDb_WebScraping_KMeans.ipynb
-│   └── Notebook2_Modelo_Comparacao_Features.ipynb
+├── Notebook1_IMDb_WebScraping_KMeans.ipynb  # Web Scraping + KMeans
+├── Notebook2_Modelo_Comparacao_Features.ipynb  # Comparação Modelos
+├── Notebook3_PyCaret_Comparison.ipynb ⭐ # PyCaret vs Scikit (NOVO)
 ├── imdb_100plus_with_clusters.csv  # Dataset processado
+├── pycaret_vs_sklearn_comparison.csv ⭐ # Comparação ML (NOVO)
 ├── VALIDACAO_METODO1.md          # Relatório Método 1
 ├── VALIDACAO_METODO2.md          # Relatório Método 2
+├── REVISAO_OBJETIVOS.md          ⭐ # Revisão Completa (NOVO)
+├── GUIA_TESTES.md                # Guia de Testes
+├── ESTRUTURA_PROJETO.md          # Estrutura Detalhada
 ├── package.json                  # Dependências Node.js
 ├── tsconfig.json                 # Config TypeScript
 ├── tailwind.config.ts            # Config Tailwind
