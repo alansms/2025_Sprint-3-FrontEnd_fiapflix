@@ -7,49 +7,55 @@ import path from 'path'
 let realMovies: Movie[] = []
 
 try {
-  // Tentar carregar dataset com 100+ filmes primeiro
-  const expandedDataPath = path.join(process.cwd(), 'imdb_100plus_movies.json')
-  const expandedData = fs.readFileSync(expandedDataPath, 'utf-8')
-  realMovies = JSON.parse(expandedData)
-  console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset 100+)`)
+  // Tentar carregar dataset real primeiro
+  const realDataPath = path.join(process.cwd(), 'imdb_100plus_movies_real.json')
+  const realData = fs.readFileSync(realDataPath, 'utf-8')
+  realMovies = JSON.parse(realData)
+  console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset real)`)
 } catch (error) {
   try {
-    // Fallback para dataset com 50+ filmes
-    const expandedDataPath = path.join(process.cwd(), 'imdb_50plus_movies.json')
+    // Fallback para dataset com 100+ filmes
+    const expandedDataPath = path.join(process.cwd(), 'imdb_100plus_movies.json')
     const expandedData = fs.readFileSync(expandedDataPath, 'utf-8')
     realMovies = JSON.parse(expandedData)
-    console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset 50+)`)
+    console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset 100+)`)
   } catch (fallbackError) {
     try {
-      // Fallback para dataset expandido
-      const expandedDataPath = path.join(process.cwd(), 'imdb_expanded_real.json')
+      // Fallback para dataset com 50+ filmes
+      const expandedDataPath = path.join(process.cwd(), 'imdb_50plus_movies.json')
       const expandedData = fs.readFileSync(expandedDataPath, 'utf-8')
       realMovies = JSON.parse(expandedData)
-      console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset expandido)`)
+      console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset 50+)`)
     } catch (secondFallbackError) {
       try {
-        // Fallback para dados finais
-        const finalDataPath = path.join(process.cwd(), 'imdb_final_real.json')
-        const finalData = fs.readFileSync(finalDataPath, 'utf-8')
-        realMovies = JSON.parse(finalData)
-        console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dados finais)`)
+        // Fallback para dataset expandido
+        const expandedDataPath = path.join(process.cwd(), 'imdb_expanded_real.json')
+        const expandedData = fs.readFileSync(expandedDataPath, 'utf-8')
+        realMovies = JSON.parse(expandedData)
+        console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dataset expandido)`)
       } catch (thirdFallbackError) {
         try {
-          // Fallback para dados anteriores
-          const dataPath = path.join(process.cwd(), 'imdb_top250_real.json')
-          const data = fs.readFileSync(dataPath, 'utf-8')
-          realMovies = JSON.parse(data)
-          console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (fallback)`)
+          // Fallback para dados finais
+          const finalDataPath = path.join(process.cwd(), 'imdb_final_real.json')
+          const finalData = fs.readFileSync(finalDataPath, 'utf-8')
+          realMovies = JSON.parse(finalData)
+          console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (dados finais)`)
         } catch (fourthFallbackError) {
-          console.log('⚠️ Usando dados mock como fallback')
-          // Fallback para dados mock se nenhum arquivo existir
+          try {
+            // Fallback para dados do IMDb Top 250
+            const dataPath = path.join(process.cwd(), 'imdb_top250_real.json')
+            const data = fs.readFileSync(dataPath, 'utf-8')
+            realMovies = JSON.parse(data)
+            console.log(`✅ Carregados ${realMovies.length} filmes reais do IMDb (fallback)`)
+          } catch (fifthFallbackError) {
+            console.log('⚠️ Usando dados mock como fallback')
+          }
         }
       }
     }
   }
 }
 
-// Mock data baseado no dataset do IMDb Top 250 - URLs válidas e funcionais
 const mockMovies: Movie[] = [
   {
     id: '1',
@@ -74,12 +80,12 @@ const mockMovies: Movie[] = [
     title_pt: 'O Poderoso Chefão',
     year: 1972,
     rating: 9.2,
-    genre: 'Crime',
-    sinopse: 'O patriarca envelhecido de uma dinastia do crime organizado transfere o controle de seu império clandestino para seu filho relutante.',
+    genre: 'Crime, Drama',
+    sinopse: 'O patriarca envelhecido de uma dinastia do crime organizado transfere o controle de seu império clandestino para seu filme relutante.',
     director: 'Francis Ford Coppola',
     cast: 'Marlon Brando, Al Pacino, James Caan',
     duration: '175 min',
-    cluster: 2,
+    cluster: 0,
     poster_url: 'https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg',
     backdrop_url: 'https://image.tmdb.org/t/p/w1280/3bhkrj58Vtu7enYsRolD1fZdja1.jpg'
   },
@@ -90,14 +96,14 @@ const mockMovies: Movie[] = [
     title_pt: 'O Cavaleiro das Trevas',
     year: 2008,
     rating: 9.1,
-    genre: 'Action',
-    sinopse: 'Quando a ameaça conhecida como o Coringa causa estragos e caos nas pessoas de Gotham, Batman deve aceitar um dos maiores testes psicológicos e físicos de sua capacidade de lutar contra a injustiça.',
+    genre: 'Action, Crime, Drama',
+    sinopse: 'Quando uma ameaça conhecida como Coringa causa estragos e caos no povo de Gotham, Batman deve aceitar um dos maiores testes psicológicos e físicos de sua capacidade de lutar contra a injustiça.',
     director: 'Christopher Nolan',
     cast: 'Christian Bale, Heath Ledger, Aaron Eckhart',
     duration: '152 min',
-    cluster: 3,
-    poster_url: 'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg',
-    backdrop_url: 'https://image.tmdb.org/t/p/w1280/qJ2tW6WMUDux911r6m7haRef0WH.jpg'
+    cluster: 2,
+    poster_url: 'https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg',
+    backdrop_url: 'https://image.tmdb.org/t/p/w1280/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg'
   },
   {
     id: '4',
@@ -106,12 +112,12 @@ const mockMovies: Movie[] = [
     title_pt: 'O Poderoso Chefão: Parte II',
     year: 1974,
     rating: 9.0,
-    genre: 'Crime',
-    sinopse: 'A história paralela de um pai e filho que vivem vidas separadas: um como um patriarca do crime organizado e o outro como um senador idealista.',
+    genre: 'Crime, Drama',
+    sinopse: 'A vida inicial e carreira de Vito Corleone na Nova York dos anos 1920 é retratada, enquanto seu filho Michael expande o controle da família.',
     director: 'Francis Ford Coppola',
     cast: 'Al Pacino, Robert De Niro, Robert Duvall',
     duration: '202 min',
-    cluster: 2,
+    cluster: 0,
     poster_url: 'https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg',
     backdrop_url: 'https://image.tmdb.org/t/p/w1280/3bhkrj58Vtu7enYsRolD1fZdja1.jpg'
   },
@@ -122,7 +128,7 @@ const mockMovies: Movie[] = [
     title_pt: '12 Homens e uma Sentença',
     year: 1957,
     rating: 9.0,
-    genre: 'Drama',
+    genre: 'Crime, Drama',
     sinopse: 'Um júri tem que decidir se um jovem acusado de assassinato é culpado ou não. Baseado na peça, todos os homens do júri tentam descobrir se há alguma dúvida razoável.',
     director: 'Sidney Lumet',
     cast: 'Henry Fonda, Lee J. Cobb, Martin Balsam',
