@@ -42,16 +42,16 @@ venv.bak/
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# Model files (large files)
-models/*.pkl
-*.pkl
+# Model files (large files) - Mantidos para deploy
+# models/*.pkl (necessário para produção)
+# *.pkl (necessário para produção)
 *.joblib
 
-# Data files
-*.csv
-*.json
-imdb_*.json
-imdb_*.csv
+# Data files - Datasets necessários mantidos
+# *.csv (necessário para produção)
+# *.json (necessário para produção)
+# imdb_*.json (necessário para produção)
+# imdb_*.csv (necessário para produção)
 
 # Logs
 *.log

@@ -49,9 +49,10 @@ COPY --chown=nextjs:nodejs requirements.txt ./
 # Instalar dependências Python
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-# Copiar datasets
-COPY --chown=nextjs:nodejs *.json ./
-COPY --chown=nextjs:nodejs *.csv ./
+# Copiar datasets (necessários para funcionamento)
+COPY --chown=nextjs:nodejs imdb_100plus_movies_complete.json ./
+COPY --chown=nextjs:nodejs imdb_100plus_with_clusters.csv ./
+COPY --chown=nextjs:nodejs model_comparison_summary.csv ./
 
 # Mudar para usuário não-root
 USER nextjs
