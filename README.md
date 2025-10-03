@@ -126,7 +126,7 @@ A partir dos notebooks desenvolvidos nas aulas 01 a 04 do 2º semestre, onde for
 - ✅ **Justificativa** da escolha do modelo
 - 💾 **Salvamento** dos modelos treinados
 
-### 3️⃣ **Notebook3_PyCaret_Comparison.ipynb** ⭐ **NOVO**
+### 3️⃣ **Notebook3_PyCaret_Comparison.ipynb**
 - 🤖 **Implementação PyCaret** para clustering
 - ⚖️ **Comparação PyCaret vs Scikit-learn**
 - 🚀 **AutoML** com múltiplos algoritmos (KMeans, DBSCAN, Hierarchical, GMM)
@@ -156,7 +156,7 @@ A partir dos notebooks desenvolvidos nas aulas 01 a 04 do 2º semestre, onde for
 - Recomenda **5 filmes** do mesmo cluster
 - **Modelo:** Exclusivamente TF-IDF (sinopses vetorizadas)
 
-### 🤖 **IA Generativa para Enriquecimento de Sinopses** ⭐ **NOVO - PONTO EXTRA**
+### 🤖 **IA Generativa para Enriquecimento de Sinopses** ⭐
 
 #### 📝 **Sistema de Enriquecimento**
 - **Arquivo Python:** `lib/ai_synopsis_enhancer.py`
