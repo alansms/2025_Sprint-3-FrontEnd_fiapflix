@@ -7,9 +7,10 @@ interface HeaderProps {
   onRecommendation: (method: 'method1' | 'method2') => void
   onSearch?: (query: string) => void
   onAISearch?: () => void
+  onFavorites?: () => void
 }
 
-export default function Header({ onRecommendation, onSearch, onAISearch }: HeaderProps) {
+export default function Header({ onRecommendation, onSearch, onAISearch, onFavorites }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -46,7 +47,7 @@ export default function Header({ onRecommendation, onSearch, onAISearch }: Heade
             Séries
           </button>
           <button 
-            onClick={() => onRecommendation('method1')}
+            onClick={() => onFavorites?.()}
             className="text-white hover:text-gray-300 transition-colors"
           >
             Minha Lista
@@ -106,9 +107,15 @@ export default function Header({ onRecommendation, onSearch, onAISearch }: Heade
             <a href="#" className="block text-white hover:text-gray-300">
               Séries
             </a>
-            <a href="#" className="block text-white hover:text-gray-300">
+            <button 
+              onClick={() => {
+                onFavorites?.()
+                setIsMenuOpen(false)
+              }}
+              className="block text-white hover:text-gray-300"
+            >
               Minha Lista
-            </a>
+            </button>
             <div className="pt-4 border-t border-gray-800">
               <button
                 onClick={() => {

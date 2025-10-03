@@ -8,6 +8,7 @@ import MovieRow from '@/components/MovieRow'
 import RecommendationModal from '@/components/RecommendationModal'
 import MovieDetailsModal from '@/components/MovieDetailsModal'
 import MovieExpandedModal from '@/components/MovieExpandedModal'
+import FavoritesModal from '@/components/FavoritesModal'
 import SplashScreen from '@/components/SplashScreen'
 import { Movie } from '@/lib/types'
 
@@ -22,6 +23,7 @@ export default function Home() {
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null)
   const [showMovieDetails, setShowMovieDetails] = useState(false)
   const [showMovieExpanded, setShowMovieExpanded] = useState(false)
+  const [showFavorites, setShowFavorites] = useState(false)
 
   useEffect(() => {
     fetchMovies()
@@ -99,7 +101,12 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-netflix-black">
-      <Header onRecommendation={handleRecommendation} onSearch={handleSearch} onAISearch={() => setShowAISearch(true)} />
+              <Header 
+                onRecommendation={handleRecommendation} 
+                onSearch={handleSearch} 
+                onAISearch={() => setShowAISearch(true)}
+                onFavorites={() => setShowFavorites(true)}
+              />
       
       <main>
         <Hero movies={movies.slice(0, 5)} />
@@ -183,6 +190,14 @@ export default function Home() {
             setShowMovieExpanded(false)
             setShowMovieDetails(true)
           }}
+        />
+      )}
+
+      {showFavorites && (
+        <FavoritesModal
+          onClose={() => setShowFavorites(false)}
+          onMovieClick={handleMovieClick}
+          onMovieInfo={handleMovieInfo}
         />
       )}
     </div>
