@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { ChevronLeft, ChevronRight, Star, Play } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Star, Play, Info } from 'lucide-react'
 import Image from 'next/image'
 import { Movie } from '@/lib/types'
 
@@ -10,9 +10,11 @@ interface MovieRowProps {
   movies: Movie[]
   featured?: boolean
   id?: string
+  onMovieClick?: (movie: Movie) => void
+  onMovieInfo?: (movie: Movie) => void
 }
 
-export default function MovieRow({ title, movies, featured = false, id }: MovieRowProps) {
+export default function MovieRow({ title, movies, featured = false, id, onMovieClick, onMovieInfo }: MovieRowProps) {
   const [scrollPosition, setScrollPosition] = useState(0)
   const rowRef = useRef<HTMLDivElement>(null)
 
@@ -64,7 +66,13 @@ export default function MovieRow({ title, movies, featured = false, id }: MovieR
           style={{ scrollBehavior: 'smooth' }}
         >
           {movies.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} featured={featured} />
+            <MovieCard 
+              key={movie.id} 
+              movie={movie} 
+              featured={featured}
+              onMovieClick={onMovieClick}
+              onMovieInfo={onMovieInfo}
+            />
           ))}
         </div>
       </div>
@@ -75,9 +83,11 @@ export default function MovieRow({ title, movies, featured = false, id }: MovieR
 interface MovieCardProps {
   movie: Movie
   featured?: boolean
+  onMovieClick?: (movie: Movie) => void
+  onMovieInfo?: (movie: Movie) => void
 }
 
-function MovieCard({ movie, featured = false }: MovieCardProps) {
+function MovieCard({ movie, featured = false, onMovieClick, onMovieInfo }: MovieCardProps) {
   const [isHovered, setIsHovered] = useState(false)
 
   return (
@@ -110,9 +120,20 @@ function MovieCard({ movie, featured = false }: MovieCardProps) {
 
           {/* Overlay on Hover */}
           {isHovered && (
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <button className="bg-netflix-red text-white p-3 rounded-full hover:bg-red-700 transition-colors">
+            <div className="absolute inset-0 bg-black/50 flex items-center justify-center space-x-2">
+              <button 
+                onClick={() => onMovieClick?.(movie)}
+                className="bg-netflix-red text-white p-3 rounded-full hover:bg-red-700 transition-colors"
+                title="Assistir"
+              >
                 <Play size={24} fill="currentColor" />
+              </button>
+              <button 
+                onClick={() => onMovieInfo?.(movie)}
+                className="bg-gray-600 text-white p-3 rounded-full hover:bg-gray-700 transition-colors"
+                title="Mais Informações"
+              >
+                <Info size={24} />
               </button>
             </div>
           )}

@@ -6,6 +6,8 @@ import AISearchModal from '@/components/AISearchModal'
 import Hero from '@/components/Hero'
 import MovieRow from '@/components/MovieRow'
 import RecommendationModal from '@/components/RecommendationModal'
+import MovieDetailsModal from '@/components/MovieDetailsModal'
+import MovieExpandedModal from '@/components/MovieExpandedModal'
 import SplashScreen from '@/components/SplashScreen'
 import { Movie } from '@/lib/types'
 
@@ -17,6 +19,9 @@ export default function Home() {
   const [selectedMethod, setSelectedMethod] = useState<'method1' | 'method2' | null>(null)
   const [showSplash, setShowSplash] = useState(true)
   const [showAISearch, setShowAISearch] = useState(false)
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null)
+  const [showMovieDetails, setShowMovieDetails] = useState(false)
+  const [showMovieExpanded, setShowMovieExpanded] = useState(false)
 
   useEffect(() => {
     fetchMovies()
@@ -60,6 +65,22 @@ export default function Home() {
     setShowSplash(false)
   }
 
+  const handleMovieClick = (movie: Movie) => {
+    setSelectedMovie(movie)
+    setShowMovieExpanded(true)
+  }
+
+  const handleMovieInfo = (movie: Movie) => {
+    setSelectedMovie(movie)
+    setShowMovieDetails(true)
+  }
+
+  const handlePlayMovie = (movie: Movie) => {
+    // Aqui você pode implementar a lógica para reproduzir o filme
+    console.log('Reproduzindo filme:', movie.title_pt)
+    // Por exemplo, abrir um player de vídeo ou redirecionar para uma página de reprodução
+  }
+
   // Mostrar splash screen primeiro
   if (showSplash) {
     return <SplashScreen onComplete={handleSplashComplete} />
@@ -89,6 +110,8 @@ export default function Home() {
             movies={filteredMovies} 
             featured={true}
             id="filmes"
+            onMovieClick={handleMovieClick}
+            onMovieInfo={handleMovieInfo}
           />
           
           <MovieRow 
@@ -98,6 +121,8 @@ export default function Home() {
               movie.genre?.toLowerCase().includes('adventure')
             )} 
             id="series"
+            onMovieClick={handleMovieClick}
+            onMovieInfo={handleMovieInfo}
           />
           
           <MovieRow 
@@ -105,6 +130,8 @@ export default function Home() {
             movies={filteredMovies.filter(movie => 
               movie.genre?.toLowerCase().includes('drama')
             )} 
+            onMovieClick={handleMovieClick}
+            onMovieInfo={handleMovieInfo}
           />
           
           <MovieRow 
@@ -112,6 +139,8 @@ export default function Home() {
             movies={filteredMovies.filter(movie => 
               movie.genre?.toLowerCase().includes('crime')
             )} 
+            onMovieClick={handleMovieClick}
+            onMovieInfo={handleMovieInfo}
           />
         </div>
       </main>
@@ -129,6 +158,32 @@ export default function Home() {
 
       {showAISearch && (
         <AISearchModal onClose={() => setShowAISearch(false)} />
+      )}
+
+      {showMovieDetails && selectedMovie && (
+        <MovieDetailsModal
+          movie={selectedMovie}
+          onClose={() => {
+            setShowMovieDetails(false)
+            setSelectedMovie(null)
+          }}
+          onPlay={handlePlayMovie}
+        />
+      )}
+
+      {showMovieExpanded && selectedMovie && (
+        <MovieExpandedModal
+          movie={selectedMovie}
+          onClose={() => {
+            setShowMovieExpanded(false)
+            setSelectedMovie(null)
+          }}
+          onPlay={handlePlayMovie}
+          onDetails={() => {
+            setShowMovieExpanded(false)
+            setShowMovieDetails(true)
+          }}
+        />
       )}
     </div>
   )
