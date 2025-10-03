@@ -303,7 +303,34 @@ Abra o navegador em: **http://127.0.0.1:3001**
 
 ## 🌐 Deploy
 
-### Netlify (Recomendado)
+### 🐳 VPS com Docker (RECOMENDADO)
+
+**Método mais completo com todas as funcionalidades!**
+
+#### Instalação Automática em 1 Comando:
+```bash
+curl -fsSL https://raw.githubusercontent.com/alansms/2025_Sprint-3-FrontEnd_fiapflix/main/install-vps.sh | sudo bash
+```
+
+**Pronto!** Aplicação estará rodando em `http://SEU_IP`
+
+#### Requisitos:
+- Ubuntu 20.04+ ou Debian 11+
+- 2GB RAM (recomendado 4GB)
+- 2 CPU cores
+- 20GB disco
+
+#### Provedores Recomendados:
+- **DigitalOcean**: Droplet $12/mês
+- **Linode**: $10/mês
+- **Contabo**: €5.99/mês
+- **Proxmox**: LXC Container local
+
+📖 **Guia Completo**: Ver [DEPLOY-VPS.md](DEPLOY-VPS.md)
+
+---
+
+### Netlify (Limitado - Apenas Frontend)
 
 1. **Criar conta no Netlify**: https://www.netlify.com/
 

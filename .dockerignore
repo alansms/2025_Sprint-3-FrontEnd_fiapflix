@@ -1,0 +1,62 @@
+# Dependências
+node_modules
+npm-debug.log
+yarn-error.log
+.pnpm-debug.log
+
+# Next.js
+.next
+out
+
+# Testes
+coverage
+.nyc_output
+
+# Ambiente
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs
+
+# Documentação de desenvolvimento
+README.md
+CHANGELOG.md
+*.md
+
+# Backup
+*backup*
+*BACKUP*
+
+# Notebooks (não necessários em produção)
+*.ipynb
+.ipynb_checkpoints
+
+# Scripts de desenvolvimento
+scripts
+setup.sh
+
+# Temporários
+tmp
+temp
+
