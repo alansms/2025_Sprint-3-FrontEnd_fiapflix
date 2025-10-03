@@ -72,3 +72,4 @@ echo "• Configurar variáveis de ambiente"
 echo "• Testar em produção"
 echo ""
 echo -e "${GREEN}✨ FiapFlix está 100% funcional e pronto para o GitHub!${NC}"
+

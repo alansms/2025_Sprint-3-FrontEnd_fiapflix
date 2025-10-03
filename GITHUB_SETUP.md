@@ -148,3 +148,4 @@ fiapflix/
 **🎯 Pronto para subir no GitHub!** 
 
 Escolha uma das opções acima e siga os passos. O projeto está completamente preparado e funcional! 🚀
+
