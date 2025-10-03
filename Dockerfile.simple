@@ -1,0 +1,38 @@
+# Dockerfile Simplificado para FiapFlix - Evita problemas de lockfile
+FROM node:20-alpine
+
+# Instalar Python e dependências necessárias
+RUN apk add --no-cache \
+    python3 \
+    py3-pip \
+    py3-numpy \
+    py3-scikit-learn \
+    py3-pandas \
+    py3-requests \
+    py3-beautifulsoup4
+
+# Definir diretório de trabalho
+WORKDIR /app
+
+# Copiar package.json
+COPY package.json ./
+
+# Instalar dependências sem usar lockfile
+RUN npm install --no-package-lock
+
+# Copiar código fonte
+COPY . .
+
+# Build da aplicação
+RUN npm run build
+
+# Expor porta
+EXPOSE 3001
+
+# Variáveis de ambiente
+ENV PORT 3001
+ENV NODE_ENV production
+ENV HOSTNAME 0.0.0.0
+
+# Comando de inicialização
+CMD ["npm", "start", "--", "--hostname", "0.0.0.0", "--port", "3001"]

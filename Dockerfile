@@ -10,8 +10,8 @@ WORKDIR /app
 # Copiar package files
 COPY package*.json ./
 
-# Instalar dependências
-RUN npm ci --only=production
+# Instalar dependências - usar npm install para compatibilidade com lockfileVersion 3
+RUN npm install
 
 # Copiar código fonte
 COPY . .
