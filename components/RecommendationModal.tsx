@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { X, Sparkles, Star, Clock, Users, Brain, BarChart3, Target } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { X, Sparkles, Star, Clock, Users, Brain, BarChart3, Target, Heart } from 'lucide-react'
 import { Movie, RecommendationResponse } from '@/lib/types'
 
 interface RecommendationModalProps {
@@ -18,6 +18,23 @@ export default function RecommendationModal({ method, movies, onClose }: Recomme
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>('')
   const [currentMethod, setCurrentMethod] = useState<'method1' | 'method2'>(method)
+  const [favorites, setFavorites] = useState<string[]>([])
+
+  // Carregar favoritos do localStorage
+  useEffect(() => {
+    const savedFavorites = JSON.parse(localStorage.getItem('fiapflix_favorites') || '[]')
+    setFavorites(savedFavorites)
+  }, [])
+
+  // Função para alternar favorito
+  const toggleFavorite = (movieId: string) => {
+    const newFavorites = favorites.includes(movieId)
+      ? favorites.filter(id => id !== movieId)
+      : [...favorites, movieId]
+    
+    setFavorites(newFavorites)
+    localStorage.setItem('fiapflix_favorites', JSON.stringify(newFavorites))
+  }
 
   // Sinopses reais baseadas nos filmes do dataset IMDb Top 250
   const sampleSynopses = [
@@ -326,6 +343,22 @@ export default function RecommendationModal({ method, movies, onClose }: Recomme
                 <p className="text-gray-300 text-sm mt-2 line-clamp-2">
                   {movie.sinopse}
                 </p>
+              </div>
+              <div className="flex-shrink-0">
+                <button
+                  onClick={() => toggleFavorite(movie.id)}
+                  className={`p-2 rounded-full transition-colors ${
+                    favorites.includes(movie.id)
+                      ? 'bg-netflix-red text-white'
+                      : 'bg-gray-600 text-gray-300 hover:bg-gray-500'
+                  }`}
+                  title={favorites.includes(movie.id) ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+                >
+                  <Heart 
+                    size={20} 
+                    fill={favorites.includes(movie.id) ? 'currentColor' : 'none'}
+                  />
+                </button>
               </div>
             </div>
           ))}
