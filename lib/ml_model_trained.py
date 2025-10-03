@@ -42,17 +42,17 @@ class MovieRecommendationSystem:
             self.scaler = joblib.load('models/standard_scaler.pkl')
             self.le_genre = joblib.load('models/label_encoder_genre.pkl')
             
-                    # Carregar dataset
+            # Carregar dataset
+            try:
+                self.df_movies = pd.read_csv('imdb_100plus_with_clusters.csv', sep=';')
+            except:
+                try:
+                    self.df_movies = pd.read_csv('imdb_real_with_clusters.csv', sep=';')
+                except:
                     try:
-                        self.df_movies = pd.read_csv('imdb_100plus_with_clusters.csv', sep=';')
+                        self.df_movies = pd.read_csv('imdb_50plus_with_clusters.csv', sep=';')
                     except:
-                        try:
-                            self.df_movies = pd.read_csv('imdb_real_with_clusters.csv', sep=';')
-                        except:
-                            try:
-                                self.df_movies = pd.read_csv('imdb_50plus_with_clusters.csv', sep=';')
-                            except:
-                                self.df_movies = pd.read_csv('imdb_top250_with_clusters.csv', sep=';')
+                        self.df_movies = pd.read_csv('imdb_top250_with_clusters.csv', sep=';')
             
             self.models_loaded = True
             
